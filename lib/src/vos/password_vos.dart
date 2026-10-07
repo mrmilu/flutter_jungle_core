@@ -1,0 +1,36 @@
+import '../../flutter_jungle_core.dart';
+import '../failures/password_failure.dart';
+
+class PasswordVos extends ValueObject<PasswordFailure, String> {
+  @override
+  final Either<PasswordFailure, String> value;
+  factory PasswordVos(String input) {
+    return PasswordVos._(_validate(input.trim()));
+  }
+  const PasswordVos._(this.value);
+
+  static Either<PasswordFailure, String> _validate(String input) {
+    if (input.length < 8) {
+      return left(const PasswordFailure.minLength());
+    }
+
+    if (!RegExp(r'^(?=.*[A-Z])').hasMatch(input)) {
+      return left(const PasswordFailure.includeUppercase());
+    }
+
+    if (!RegExp(r'^(?=.*[a-z])').hasMatch(input)) {
+      return left(const PasswordFailure.includeLowercase());
+    }
+
+    if (!RegExp(r'^(?=.*[!@#$%^&*()_+\-=\[\]{};:"\\|,.<>?/~`])')
+        .hasMatch(input)) {
+      return left(const PasswordFailure.includeSpecialCharacter());
+    }
+
+    if (!RegExp(r'^(?=.*[0-9])').hasMatch(input)) {
+      return left(const PasswordFailure.includeDigit());
+    }
+
+    return right(input);
+  }
+}
