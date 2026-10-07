@@ -1,9 +1,9 @@
 name: flutter_jungle_core
 description: "Flutter Jungle Core"
 version: 0.0.1
-homepage: https://github.com/tu_usuario/tu_repositorio
-repository: https://github.com/tu_usuario/tu_repositorio
-issue_tracker: https://github.com/tu_usuario/tu_repositorio/issues
+homepage: https://github.com/mrmilu/flutter_jungle_core
+repository: https://github.com/mrmilu/flutter_jungle_core
+issue_tracker: https://github.com/mrmilu/flutter_jungle_core/issues
 
 environment:
   sdk: ^3.13.4
