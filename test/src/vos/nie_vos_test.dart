@@ -4,11 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('NieVos Unit Tests', () {
-    group('Casos Válidos', () {
+    group('Valid Cases', () {
       test(
-        'debe retornar Right con NIEs válidos para los prefijos X, Y y Z',
+        'returns Right for valid NIEs with the X, Y, and Z prefixes',
         () {
-          // NIEs con letra de control calculada mediante módulo 23
+          // NIEs with control letters calculated using modulo 23.
           const validNies = [
             'X1234567L', // Prefijo X (01234567 % 23 = 11 -> 'L')
             'Y1234567X', // Prefijo Y (11234567 % 23 = 10 -> 'X')
@@ -21,10 +21,10 @@ void main() {
             expect(
               result.value.isRight(),
               true,
-              reason: 'Falló para NIE: $nie',
+              reason: 'Failed for NIE: $nie',
             );
             result.value.map(
-              isLeft: (l) => fail('No debería retornar fallo para: $nie'),
+              isLeft: (l) => fail('Should not return a failure for: $nie'),
               isRight: (r) => expect(r, nie),
             );
           }
@@ -32,25 +32,25 @@ void main() {
       );
 
       test(
-        'debe convertir a mayúsculas y eliminar espacios laterales con trim',
+        'converts to uppercase and trims leading and trailing whitespace',
         () {
           const input = '   x1234567l   ';
           final result = NieVos(input);
 
           expect(result.value.isRight(), true);
           result.value.map(
-            isLeft: (l) => fail('No debería retornar fallo'),
+            isLeft: (l) => fail('Should not return a failure'),
             isRight: (r) => expect(r, 'X1234567L'),
           );
         },
       );
     });
 
-    group('Casos de Fallo - Invalid', () {
+    group('Failure Cases - Invalid', () {
       test(
-        'debe retornar NieFailure.invalid si la letra inicial no es X, Y o Z',
+        'returns NieFailure.invalid if the initial letter is not X, Y, or Z',
         () {
-          // 'A' o 'B' corresponden a NIF o CIF, no a NIE
+          // 'A' and 'B' are used by NIF or CIF, not NIE.
           const invalidPrefixes = ['A1234567L', 'B1234567X', '11234567L'];
 
           for (final input in invalidPrefixes) {
@@ -59,23 +59,23 @@ void main() {
             expect(
               result.value.isLeft(),
               true,
-              reason: 'Debería fallar para: $input',
+              reason: 'Should fail for: $input',
             );
             result.value.map(
               isLeft: (l) => expect(l, isA<NieFailureInvalid>()),
-              isRight: (r) => fail('No debería ser válido: $input'),
+              isRight: (r) => fail('Should not be valid: $input'),
             );
           }
         },
       );
 
-      test('debe retornar NieFailure.invalid si la longitud o estructura es incorrecta', () {
+      test('returns NieFailure.invalid if the length or structure is incorrect', () {
         const invalidFormats = [
           '',
-          'X123456L', // 6 números en vez de 7
-          'X12345678L', // 8 números en vez de 7
-          'X123A567L', // Letra intermedia
-          'X12345671', // Número al final en vez de letra
+          'X123456L', // 6 digits instead of 7.
+          'X12345678L', // 8 digits instead of 7.
+          'X123A567L', // Letter in the middle.
+          'X12345671', // Number at the end instead of a letter.
         ];
 
         for (final input in invalidFormats) {
@@ -84,19 +84,19 @@ void main() {
           expect(
             result.value.isLeft(),
             true,
-            reason: 'Debería fallar para: $input',
+            reason: 'Should fail for: $input',
           );
           result.value.map(
             isLeft: (l) => expect(l, isA<NieFailureInvalid>()),
-            isRight: (r) => fail('No debería ser válido: $input'),
+            isRight: (r) => fail('Should not be valid: $input'),
           );
         }
       });
 
       test(
-        'debe retornar NieFailure.invalid si la letra de control no coincide',
+        'returns NieFailure.invalid if the control letter does not match',
         () {
-          // X1234567L es el correcto, probamos con letras de control alteradas
+          // X1234567L is correct; test with altered control letters.
           const badChecksumNies = ['X1234567A', 'Y1234567B', 'Z1234567C'];
 
           for (final input in badChecksumNies) {
@@ -105,11 +105,11 @@ void main() {
             expect(
               result.value.isLeft(),
               true,
-              reason: 'Debería fallar checksum para: $input',
+              reason: 'Should fail checksum for: $input',
             );
             result.value.map(
               isLeft: (l) => expect(l, isA<NieFailureInvalid>()),
-              isRight: (r) => fail('No debería ser válido: $input'),
+              isRight: (r) => fail('Should not be valid: $input'),
             );
           }
         },

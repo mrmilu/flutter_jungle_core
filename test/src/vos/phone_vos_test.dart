@@ -4,8 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('PhoneVos Unit Tests', () {
-    group('Casos Válidos', () {
-      test('debe retornar Right cuando el teléfono contiene solo números/espacios y coincide con maxLength', () {
+    group('Valid Cases', () {
+      test('returns Right when the phone number contains only digits/spaces and matches maxLength', () {
         const input = '612345678';
         const maxLength = 9;
 
@@ -13,12 +13,12 @@ void main() {
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo para: $input'),
+          isLeft: (l) => fail('Should not return a failure for: $input'),
           isRight: (r) => expect(r, input),
         );
       });
 
-      test('debe retornar Right cuando incluye espacios internos y cumple maxLength', () {
+      test('returns Right when it contains internal whitespace and meets maxLength', () {
         const input = '612 34 56';
         const maxLength = 9;
 
@@ -26,12 +26,12 @@ void main() {
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo para: $input'),
+          isLeft: (l) => fail('Should not return a failure for: $input'),
           isRight: (r) => expect(r, input),
         );
       });
 
-      test('debe hacer trim a los espacios al inicio y al final', () {
+      test('trims leading and trailing whitespace', () {
         const input = '   612345678   ';
         const maxLength = 9;
 
@@ -39,14 +39,14 @@ void main() {
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, '612345678'),
         );
       });
     });
 
-    group('Casos de Fallo - Empty', () {
-      test('debe retornar PhoneFailure.empty cuando el input está vacío o son solo espacios', () {
+    group('Failure Cases - Empty', () {
+      test('returns PhoneFailure.empty when the input is empty or contains only whitespace', () {
         const emptyInputs = ['', '   '];
         const maxLength = 9;
 
@@ -56,15 +56,15 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, isA<PhoneFailureEmpty>()),
-            isRight: (r) => fail('Debería ser vacío para: $input'),
+            isRight: (r) => fail('Should be empty for: $input'),
           );
         }
       });
     });
 
-    group('Casos de Fallo - Invalid', () {
+    group('Failure Cases - Invalid', () {
       test(
-        'debe retornar PhoneFailure.invalid si contiene letras o símbolos',
+        'returns PhoneFailure.invalid if it contains letters or symbols',
         () {
           const invalidInputs = ['61234567a', '+34612345', '612-345-67'];
           const maxLength = 9;
@@ -75,33 +75,37 @@ void main() {
             expect(
               result.value.isLeft(),
               true,
-              reason: 'Debería ser inválido: $input',
+              reason: 'Should be invalid: $input',
             );
             result.value.map(
               isLeft: (l) => expect(l, isA<PhoneFailureInvalid>()),
-              isRight: (r) => fail('No debería ser válido: $input'),
+              isRight: (r) => fail('Should not be valid: $input'),
             );
           }
         },
       );
 
-      test('debe retornar PhoneFailure.invalid si la longitud es menor que maxLength', () {
-        const input = '61234567'; // 8 caracteres
-        const maxLength = 9;
+      test(
+        'returns PhoneFailure.invalid if the length is less than maxLength',
+        () {
+          const input = '61234567'; // 8 characters.
+          const maxLength = 9;
 
-        final result = PhoneVos(input, maxLength);
+          final result = PhoneVos(input, maxLength);
 
-        expect(result.value.isLeft(), true);
-        result.value.map(
-          isLeft: (l) => expect(l, isA<PhoneFailureInvalid>()),
-          isRight: (r) => fail('Debería fallar por longitud insuficiente'),
-        );
-      });
+          expect(result.value.isLeft(), true);
+          result.value.map(
+            isLeft: (l) => expect(l, isA<PhoneFailureInvalid>()),
+            isRight: (r) =>
+                fail('Should fail because the length is insufficient'),
+          );
+        },
+      );
     });
 
-    group('Casos de Fallo - TooLong', () {
-      test('debe retornar PhoneFailure.tooLong si la longitud es mayor que maxLength', () {
-        const input = '6123456789'; // 10 caracteres
+    group('Failure Cases - TooLong', () {
+      test('returns PhoneFailure.tooLong if the length exceeds maxLength', () {
+        const input = '6123456789'; // 10 characters.
         const maxLength = 9;
 
         final result = PhoneVos(input, maxLength);
@@ -109,7 +113,7 @@ void main() {
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, isA<PhoneFailureTooLong>()),
-          isRight: (r) => fail('Debería fallar por exceder maxLength'),
+          isRight: (r) => fail('Should fail because it exceeds maxLength'),
         );
       });
     });

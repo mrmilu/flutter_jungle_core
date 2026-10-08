@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('IbanVos Unit Tests', () {
-    group('Casos Válidos', () {
-      test('debe retornar Right con un IBAN español totalmente válido', () {
-        // IBAN español estándar válido (ES + mod-97 + Banco/Sucursal/DC/Cuenta válidos)
+    group('Valid Cases', () {
+      test('returns Right for a fully valid Spanish IBAN', () {
+        // Valid standard Spanish IBAN (ES + mod-97 + valid bank/branch/check digits/account).
         const validIbans = ['ES9121000418450200051332'];
 
         for (final iban in validIbans) {
@@ -15,35 +15,35 @@ void main() {
           expect(
             result.value.isRight(),
             true,
-            reason: 'Falló para IBAN: $iban',
+            reason: 'Failed for IBAN: $iban',
           );
           result.value.map(
-            isLeft: (l) => fail('No debería retornar fallo para: $iban'),
+            isLeft: (l) => fail('Should not return a failure for: $iban'),
             isRight: (r) => expect(r, iban),
           );
         }
       });
 
-      test('debe hacer trim a los espacios al inicio y al final', () {
+      test('trims leading and trailing whitespace', () {
         const input = '   ES9121000418450200051332   ';
         final result = IbanVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, 'ES9121000418450200051332'),
         );
       });
     });
 
-    group('Casos de Fallo - Longitud', () {
+    group('Failure Cases - Length', () {
       test(
-        'debe retornar IbanFailure.tooShort si tiene menos de 24 caracteres',
+        'returns IbanFailure.tooShort when shorter than 24 characters',
         () {
           const shortInputs = [
             '',
             'ES2114650100',
-            'ES211465010072203087629', // 23 caracteres
+            'ES211465010072203087629', // 23 characters.
           ];
 
           for (final input in shortInputs) {
@@ -52,21 +52,21 @@ void main() {
             expect(
               result.value.isLeft(),
               true,
-              reason: 'Debería fallar por corto: $input',
+              reason: 'Should fail because it is too short: $input',
             );
             result.value.map(
               isLeft: (l) => expect(l, isA<IbanFailureTooShort>()),
-              isRight: (r) => fail('No debería ser válido: $input'),
+              isRight: (r) => fail('Should not be valid: $input'),
             );
           }
         },
       );
 
       test(
-        'debe retornar IbanFailure.tooLong si tiene más de 24 caracteres',
+        'returns IbanFailure.tooLong when longer than 24 characters',
         () {
           const longInputs = [
-            'ES21146501007220308762930', // 25 caracteres
+            'ES21146501007220308762930', // 25 characters.
             'ES2114650100722030876293000',
           ];
 
@@ -76,25 +76,25 @@ void main() {
             expect(
               result.value.isLeft(),
               true,
-              reason: 'Debería fallar por largo: $input',
+              reason: 'Should fail because it is too long: $input',
             );
             result.value.map(
               isLeft: (l) => expect(l, isA<IbanFailureTooLong>()),
-              isRight: (r) => fail('No debería ser válido: $input'),
+              isRight: (r) => fail('Should not be valid: $input'),
             );
           }
         },
       );
     });
 
-    group('Casos de Fallo - Algoritmo y Formato (Invalid)', () {
+    group('Failure Cases - Algorithm and Format (Invalid)', () {
       test(
-        'debe retornar IbanFailure.invalid si no cumple con la regex inicial',
+        'returns IbanFailure.invalid when it does not match the initial regex',
         () {
           const invalidFormats = [
-            '122114650100722030876293', // Empieza con números en vez de letras de país
-            'ESXX14650100722030876293', // No tiene 2 dígitos tras el código de país
-            'ES211465010072203087629#', // Carácter especial no permitido
+            '122114650100722030876293', // Starts with digits instead of a country code.
+            'ESXX14650100722030876293', // Does not have 2 digits after the country code.
+            'ES211465010072203087629#', // Disallowed special character.
           ];
 
           for (final input in invalidFormats) {
@@ -103,16 +103,16 @@ void main() {
             expect(result.value.isLeft(), true);
             result.value.map(
               isLeft: (l) => expect(l, isA<IbanFailureInvalid>()),
-              isRight: (r) => fail('No debería aceptar formato: $input'),
+              isRight: (r) => fail('Should not accept format: $input'),
             );
           }
         },
       );
 
       test(
-        'debe retornar IbanFailure.invalid si falla la verificación mod-97',
+        'returns IbanFailure.invalid when the mod-97 check fails',
         () {
-          // ES2114650100722030876293 es el válido, cambiamos dígitos mod-97 iniciales
+          // ES2114650100722030876293 is valid; change the initial mod-97 digits.
           const badChecksumIbans = [
             'ES0014650100722030876293',
             'ES9914650100722030876293',
@@ -124,17 +124,17 @@ void main() {
             expect(result.value.isLeft(), true);
             result.value.map(
               isLeft: (l) => expect(l, isA<IbanFailureInvalid>()),
-              isRight: (r) => fail('Debería fallar mod-97 para: $input'),
+              isRight: (r) => fail('Should fail mod-97 for: $input'),
             );
           }
         },
       );
 
-      test('debe retornar IbanFailure.invalid si fallan los dígitos de control españoles (DC)', () {
-        // Mantiene el formato pero alteramos los dígitos de control nacionales (posiciones 12-13)
+      test('returns IbanFailure.invalid when the Spanish check digits (DC) fail', () {
+        // Keep the format but change the national check digits (positions 12-13).
         const badControlDigitsIbans = [
-          'ES2114650100992030876293', // DC alterado a '99'
-          'ES2114650100002030876293', // DC alterado a '00'
+          'ES2114650100992030876293', // DC changed to '99'.
+          'ES2114650100002030876293', // DC changed to '00'.
         ];
 
         for (final input in badControlDigitsIbans) {
@@ -143,7 +143,7 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, isA<IbanFailureInvalid>()),
-            isRight: (r) => fail('Debería fallar validación DC para: $input'),
+            isRight: (r) => fail('Should fail the DC validation for: $input'),
           );
         }
       });

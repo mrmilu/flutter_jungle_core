@@ -4,45 +4,45 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('DescriptionVos Unit Tests', () {
-    group('Casos Válidos', () {
-      test('debe retornar Right con una descripción válida', () {
-        const input = 'Esta es una descripción válida para el Value Object.';
+    group('Valid Cases', () {
+      test('returns Right with a valid description', () {
+        const input = 'This is a valid description for the Value Object.';
         final result = DescriptionVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) =>
-              expect(r, 'Esta es una descripción válida para el Value Object.'),
+              expect(r, 'This is a valid description for the Value Object.'),
         );
       });
 
-      test('debe retornar Right cuando tiene exactamente 320 caracteres', () {
-        final input = 'a' * 320; // Cadena de exactamente 320 caracteres
+      test('returns Right when it contains exactly 320 characters', () {
+        final input = 'a' * 320; // String containing exactly 320 characters.
         final result = DescriptionVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r.length, 320),
         );
       });
 
-      test('debe hacer trim a los espacios al inicio y al final', () {
-        const input = '   Descripción con espacios   ';
+      test('trims leading and trailing whitespace', () {
+        const input = '   Description with whitespace   ';
         final result = DescriptionVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
-          isRight: (r) => expect(r, 'Descripción con espacios'),
+          isLeft: (l) => fail('Should not return a failure'),
+          isRight: (r) => expect(r, 'Description with whitespace'),
         );
       });
     });
 
-    group('Casos de Fallo - Empty', () {
+    group('Failure Cases - Empty', () {
       test(
-        'debe retornar DescriptionFailure.empty cuando el input está vacío',
+        'returns DescriptionFailure.empty when the input is empty',
         () {
           const input = '';
           final result = DescriptionVos(input);
@@ -50,34 +50,34 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, const DescriptionFailure.empty()),
-            isRight: (r) => fail('Debería retornar fallo'),
+            isRight: (r) => fail('Should return a failure'),
           );
         },
       );
 
-      test('debe retornar DescriptionFailure.empty cuando el input solo contiene espacios', () {
+      test('returns DescriptionFailure.empty when the input contains only whitespace', () {
         const input = '     ';
         final result = DescriptionVos(input);
 
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, const DescriptionFailure.empty()),
-          isRight: (r) => fail('Debería retornar fallo'),
+          isRight: (r) => fail('Should return a failure'),
         );
       });
     });
 
-    group('Casos de Fallo - TooLong', () {
+    group('Failure Cases - TooLong', () {
       test(
-        'debe retornar DescriptionFailure.tooLong si supera los 320 caracteres',
+        'returns DescriptionFailure.tooLong when longer than 320 characters',
         () {
-          final input = 'a' * 321; // Cadena de 321 caracteres
+          final input = 'a' * 321; // String containing 321 characters.
           final result = DescriptionVos(input);
 
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, const DescriptionFailure.tooLong()),
-            isRight: (r) => fail('Debería retornar DescriptionFailure.tooLong'),
+            isRight: (r) => fail('Should return DescriptionFailure.tooLong'),
           );
         },
       );

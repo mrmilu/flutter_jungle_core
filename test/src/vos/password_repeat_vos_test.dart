@@ -4,12 +4,12 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('RepeatPasswordVos Unit Tests', () {
-    group('Casos Válidos', () {
+    group('Valid Cases', () {
       test(
-        'debe retornar Right cuando las contraseñas coinciden exactamente',
+        'returns Right when the passwords match exactly',
         () {
-          const password = 'MiPassword123!';
-          const passToMatchWith = 'MiPassword123!';
+          const password = 'MyPassword123!';
+          const passToMatchWith = 'MyPassword123!';
 
           final result = RepeatPasswordVos(
             password: password,
@@ -18,13 +18,13 @@ void main() {
 
           expect(result.value.isRight(), true);
           result.value.map(
-            isLeft: (l) => fail('No debería retornar fallo cuando coinciden'),
+            isLeft: (l) => fail('Should not return a failure when they match'),
             isRight: (r) => expect(r, password),
           );
         },
       );
 
-      test('debe retornar Right cuando ambas son cadenas vacías', () {
+      test('returns Right when both strings are empty', () {
         const password = '';
         const passToMatchWith = '';
 
@@ -35,14 +35,14 @@ void main() {
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, ''),
         );
       });
     });
 
-    group('Casos de Fallo - Mismatched', () {
-      test('debe retornar PasswordRepeatFailure.mismatched si las contraseñas no coinciden', () {
+    group('Failure Cases - Mismatched', () {
+      test('returns PasswordRepeatFailure.mismatched when the passwords do not match', () {
         const password = 'Password123!';
         const passToMatchWith = 'Password456!';
 
@@ -54,11 +54,11 @@ void main() {
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, isA<PasswordRepeatFailureMismatched>()),
-          isRight: (r) => fail('Debería retornar fallo por no coincidir'),
+          isRight: (r) => fail('Should return a failure because they do not match'),
         );
       });
 
-      test('debe retornar PasswordRepeatFailure.mismatched si difieren por mayúsculas o minúsculas', () {
+      test('returns PasswordRepeatFailure.mismatched when the passwords differ by case', () {
         const password = 'Password123';
         const passToMatchWith = 'password123';
 
@@ -71,11 +71,11 @@ void main() {
         result.value.map(
           isLeft: (l) => expect(l, isA<PasswordRepeatFailureMismatched>()),
           isRight: (r) =>
-              fail('Debería fallar por diferencia de mayúsculas/minúsculas'),
+              fail('Should fail because the letter case differs'),
         );
       });
 
-      test('debe retornar PasswordRepeatFailure.mismatched si una tiene espacios adicionales', () {
+      test('returns PasswordRepeatFailure.mismatched when one password has extra whitespace', () {
         const password = 'Password123 ';
         const passToMatchWith = 'Password123';
 
@@ -87,7 +87,7 @@ void main() {
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, isA<PasswordRepeatFailureMismatched>()),
-          isRight: (r) => fail('Debería fallar por espacios adicionales'),
+          isRight: (r) => fail('Should fail because of extra whitespace'),
         );
       });
     });

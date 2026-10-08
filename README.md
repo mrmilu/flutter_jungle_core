@@ -1,80 +1,79 @@
 # Flutter Jungle Core
 
-Paquete con utilidades reutilizables para proyectos Flutter: tipos para modelar
-resultados y recursos, objetos de valor con validaciones y herramientas de
-logging.
+A collection of reusable utilities for Flutter projects, including types for
+modeling results and resources, validated value objects, and logging tools.
 
-## Características
+## Features
 
-- `Either` para representar un resultado con una alternativa de error o éxito.
-- `Resource` y `ResultOr` para expresar estados de carga, éxito y fallo.
-- `ValueObject` como base para objetos de valor validados.
-- Validaciones listas para usar: CIF, descripción, email, nombre completo, IBAN,
-  NIE, NIF, contraseña, repetición de contraseña y teléfono.
-- Failures específicos para consultar el motivo de cada validación fallida.
-- Logging con niveles y registros estructurados.
-- Extensión `firstWhereOrNull` para iterables.
+- `Either` for representing a result with either an error or a success value.
+- `Resource` and `ResultOr` for representing loading, success, and failure
+  states.
+- `ValueObject` as a base class for validated value objects.
+- Ready-to-use validators for CIF, descriptions, email addresses, full names,
+  IBAN, NIE, NIF, passwords, password confirmation, and phone numbers.
+- Specific failures that identify the reason a validation failed.
+- Logging with levels and structured records.
+- The `firstWhereOrNull` extension for iterables.
 
-## Instalación
+## Installation
 
-Añade la dependencia a tu proyecto:
+Add the dependency to your project:
 
 ```sh
 flutter pub add flutter_jungle_core
 ```
 
-Después, importa la librería:
+Then import the library:
 
 ```dart
 import 'package:flutter_jungle_core/flutter_jungle_core.dart';
 ```
 
-## Uso
+## Usage
 
-### Validar un email
+### Validating an email address
 
-Los objetos de valor proporcionan `isValid`, `isInvalid`, `getOrElse` y `when`
-para inspeccionar el resultado de una validación:
+Value objects provide `isValid`, `isInvalid`, `getOrElse`, and `when` to inspect
+the result of a validation:
 
 ```dart
-final email = EmailVos('persona@example.com');
+final email = EmailVos('person@example.com');
 
 email.when(
   isLeft: (failure) {
-    print('Email no válido: ${failure.code}');
+    print('Invalid email: ${failure.code}');
   },
   isRight: (value) {
-    print('Email válido: $value');
+    print('Valid email: $value');
   },
 );
 ```
 
-### Representar el estado de una operación
+### Representing an operation's state
 
-`Resource` incluye los estados `none`, `loading`, `success` y `failure`:
+`Resource` includes the `none`, `loading`, `success`, and `failure` states:
 
 ```dart
 final Resource<String, List<String>> state =
-    Resource<String, List<String>>.success(['Ana', 'Luis']);
+    Resource<String, List<String>>.success(['Alice', 'Bob']);
 
 state.when(
-  isNone: () => print('Sin datos'),
-  isLoading: () => print('Cargando...'),
-  isSuccess: (users) => print('Usuarios: $users'),
+  isNone: () => print('No data'),
+  isLoading: () => print('Loading...'),
+  isSuccess: (users) => print('Users: $users'),
   isFailure: (error) => print('Error: $error'),
 );
 ```
 
-`ResultOr` ofrece estados equivalentes cuando no se necesita transportar un
-valor de éxito:
+`ResultOr` provides equivalent states when there is no success value to carry:
 
 ```dart
-final ResultOr<String> result = ResultOr<String>.failure('No se pudo guardar');
+final ResultOr<String> result = ResultOr<String>.failure('Could not save');
 
 result.when(
-  isNone: () => print('Sin resultado'),
-  isLoading: () => print('Guardando...'),
-  isSuccess: () => print('Guardado'),
+  isNone: () => print('No result'),
+  isLoading: () => print('Saving...'),
+  isSuccess: () => print('Saved'),
   isFailure: (error) => print('Error: $error'),
 );
 ```
@@ -82,12 +81,12 @@ result.when(
 ### Logging
 
 ```dart
-final logger = Logger('mi_app');
-logger.info('Aplicación iniciada');
-logger.warning('Aviso de ejemplo');
+final logger = Logger('my_app');
+logger.info('Application started');
+logger.warning('Example warning');
 ```
 
-## Validaciones disponibles
+## Available validators
 
 | Value object | Failure |
 | --- | --- |
@@ -102,8 +101,9 @@ logger.warning('Aviso de ejemplo');
 | `RepeatPasswordVos` | `PasswordRepeatFailure` |
 | `PhoneVos` | `PhoneFailure` |
 
-## Contribuir e informar de problemas
+## Contributing and reporting issues
 
-El código fuente está en [GitHub](https://github.com/mrmilu/flutter_jungle_core).
-Para reportar errores o proponer mejoras, abre una
-[incidencia](https://github.com/mrmilu/flutter_jungle_core/issues).
+The source code is hosted on
+[GitHub](https://github.com/mrmilu/flutter_jungle_core). To report a bug or
+suggest an improvement, open an
+[issue](https://github.com/mrmilu/flutter_jungle_core/issues).

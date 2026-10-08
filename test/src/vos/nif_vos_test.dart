@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('NifVos Unit Tests', () {
-    group('Casos Válidos', () {
-      test('debe retornar Right con un NIF/DNI válido', () {
-        // NIFs válidos según el algoritmo de módulo 23
+    group('Valid Cases', () {
+      test('returns Right for a valid NIF/DNI', () {
+        // Valid NIFs according to the modulo 23 algorithm.
         const validNifs = [
           '12345678Z', // 12345678 % 23 = 14 -> 'Z'
           '00000000T', // 0 % 23 = 0 -> 'T'
@@ -16,34 +16,34 @@ void main() {
         for (final nif in validNifs) {
           final result = NifVos(nif);
 
-          expect(result.value.isRight(), true, reason: 'Falló para NIF: $nif');
+          expect(result.value.isRight(), true, reason: 'Failed for NIF: $nif');
           result.value.map(
-            isLeft: (l) => fail('No debería retornar fallo para: $nif'),
+            isLeft: (l) => fail('Should not return a failure for: $nif'),
             isRight: (r) => expect(r, nif),
           );
         }
       });
 
-      test('debe hacer trim a los espacios al inicio y al final', () {
+      test('trims leading and trailing whitespace', () {
         const input = '   12345678Z   ';
         final result = NifVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, '12345678Z'),
         );
       });
     });
 
-    group('Casos de Fallo - Longitud', () {
+    group('Failure Cases - Length', () {
       test(
-        'debe retornar NifFailure.tooShort si tiene menos de 9 caracteres',
+        'returns NifFailure.tooShort when shorter than 9 characters',
         () {
           const shortInputs = [
             '',
-            '12345678', // Le falta la letra (8 caracteres)
-            '1234567Z', // 7 números + letra (8 caracteres)
+            '12345678', // Missing the letter (8 characters).
+            '1234567Z', // 7 digits + letter (8 characters).
           ];
 
           for (final input in shortInputs) {
@@ -52,20 +52,20 @@ void main() {
             expect(
               result.value.isLeft(),
               true,
-              reason: 'Debería fallar por corto: $input',
+              reason: 'Should fail because it is too short: $input',
             );
             result.value.map(
               isLeft: (l) => expect(l, isA<NifFailureTooShort>()),
-              isRight: (r) => fail('No debería ser válido: $input'),
+              isRight: (r) => fail('Should not be valid: $input'),
             );
           }
         },
       );
 
-      test('debe retornar NifFailure.tooLong si tiene más de 9 caracteres', () {
+      test('returns NifFailure.tooLong when longer than 9 characters', () {
         const longInputs = [
-          '123456789Z', // 9 números + letra (10 caracteres)
-          '12345678ZZ', // 8 números + 2 letras (10 caracteres)
+          '123456789Z', // 9 digits + letter (10 characters).
+          '12345678ZZ', // 8 digits + 2 letters (10 characters).
         ];
 
         for (final input in longInputs) {
@@ -74,23 +74,23 @@ void main() {
           expect(
             result.value.isLeft(),
             true,
-            reason: 'Debería fallar por largo: $input',
+            reason: 'Should fail because it is too long: $input',
           );
           result.value.map(
             isLeft: (l) => expect(l, isA<NifFailureTooLong>()),
-            isRight: (r) => fail('No debería ser válido: $input'),
+            isRight: (r) => fail('Should not be valid: $input'),
           );
         }
       });
     });
 
-    group('Casos de Fallo - Formato y Algoritmo (Invalid)', () {
-      test('debe retornar NifFailure.invalid si no cumple el formato (ej. letra minúscula o símbolos)', () {
+    group('Failure Cases - Format and Algorithm (Invalid)', () {
+      test('returns NifFailure.invalid if the format is invalid (e.g. lowercase letter or symbols)', () {
         const invalidFormats = [
-          '12345678z', // Letra minúscula (la regex exige [A-Z])
-          'X2345678Z', // Letra al inicio (formato NIE, no NIF)
-          '1234A678Z', // Letra intermedia
-          '12345678#', // Carácter especial
+          '12345678z', // Lowercase letter (the regex requires [A-Z]).
+          'X2345678Z', // Letter at the start (NIE format, not NIF).
+          '1234A678Z', // Letter in the middle.
+          '12345678#', // Special character.
         ];
 
         for (final input in invalidFormats) {
@@ -99,17 +99,17 @@ void main() {
           expect(
             result.value.isLeft(),
             true,
-            reason: 'Debería ser inválido: $input',
+            reason: 'Should be invalid: $input',
           );
           result.value.map(
             isLeft: (l) => expect(l, isA<NifFailureInvalid>()),
-            isRight: (r) => fail('No debería ser válido: $input'),
+            isRight: (r) => fail('Should not be valid: $input'),
           );
         }
       });
 
-      test('debe retornar NifFailure.invalid si la letra de control no coincide', () {
-        // Para 12345678 la letra correcta es Z, probamos con letras incorrectas
+      test('returns NifFailure.invalid if the control letter does not match', () {
+        // The correct letter for 12345678 is Z; test with incorrect letters.
         const badChecksumNifs = ['12345678A', '12345678B', '00000000A'];
 
         for (final input in badChecksumNifs) {
@@ -118,11 +118,11 @@ void main() {
           expect(
             result.value.isLeft(),
             true,
-            reason: 'Debería fallar checksum para: $input',
+            reason: 'Should fail checksum for: $input',
           );
           result.value.map(
             isLeft: (l) => expect(l, isA<NifFailureInvalid>()),
-            isRight: (r) => fail('No debería ser válido: $input'),
+            isRight: (r) => fail('Should not be valid: $input'),
           );
         }
       });

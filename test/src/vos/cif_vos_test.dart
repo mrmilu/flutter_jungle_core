@@ -4,58 +4,58 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('CifVos Unit Tests', () {
-    group('Casos Válidos', () {
-      test('debe retornar Right con CIFs válidos terminados en número', () {
-        // CIFs reales / matemáticamente válidos (Sociedad Anónima, Sociedad Limitada)
+    group('Valid Cases', () {
+      test('returns Right for valid CIFs ending in a number', () {
+        // Real, mathematically valid CIFs (public limited company, limited company).
         const validCifs = [
           'A28015865', // Telefónica S.A.
-          'B81167413', // CIF con control numérico válido
+          'B81167413', // CIF with a valid numeric control character.
         ];
 
         for (final cif in validCifs) {
           final result = CifVos(cif);
 
-          expect(result.value.isRight(), true, reason: 'Falló para CIF: $cif');
+          expect(result.value.isRight(), true, reason: 'Failed for CIF: $cif');
           result.value.map(
-            isLeft: (l) => fail('No debería retornar fallo para: $cif'),
+            isLeft: (l) => fail('Should not return a failure for: $cif'),
             isRight: (r) => expect(r, cif),
           );
         }
       });
 
-      test('debe retornar Right con CIFs válidos terminados en letra', () {
-        // Entidades públicas, corporaciones u organismos con letra de control
+      test('returns Right for valid CIFs ending in a letter', () {
+        // Public entities, corporations, or organizations with a letter control character.
         const validLetterCifs = [
-          'P2800001F', // Entidad pública (control 6 -> 'F')
-          'Q2800001F', // Organismo autónomo (control 6 -> 'F')
+          'P2800001F', // Public entity (control 6 -> 'F').
+          'Q2800001F', // Independent agency (control 6 -> 'F').
         ];
 
         for (final cif in validLetterCifs) {
           final result = CifVos(cif);
 
-          expect(result.value.isRight(), true, reason: 'Falló para CIF: $cif');
+          expect(result.value.isRight(), true, reason: 'Failed for CIF: $cif');
           result.value.map(
-            isLeft: (l) => fail('No debería retornar fallo para: $cif'),
+            isLeft: (l) => fail('Should not return a failure for: $cif'),
             isRight: (r) => expect(r, cif),
           );
         }
       });
 
-      test('debe convertir a mayúsculas y aplicar trim automáticamente', () {
+      test('converts to uppercase and trims automatically', () {
         const input = '  a28015865  ';
         final result = CifVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, 'A28015865'),
         );
       });
     });
 
-    group('Casos de Fallo - Longitud', () {
+    group('Failure Cases - Length', () {
       test(
-        'debe retornar CifFailure.tooShort si tiene menos de 9 caracteres',
+        'returns CifFailure.tooShort when shorter than 9 characters',
         () {
           const shortInputs = ['', 'A1234567', 'B123'];
 
@@ -65,17 +65,17 @@ void main() {
             expect(
               result.value.isLeft(),
               true,
-              reason: 'Debería fallar por corto: $input',
+              reason: 'Should fail because it is too short: $input',
             );
             result.value.map(
               isLeft: (l) => expect(l, isA<CifFailureTooShort>()),
-              isRight: (r) => fail('No debería ser válido: $input'),
+              isRight: (r) => fail('Should not be valid: $input'),
             );
           }
         },
       );
 
-      test('debe retornar CifFailure.tooLong si tiene más de 9 caracteres', () {
+      test('returns CifFailure.tooLong when longer than 9 characters', () {
         const longInputs = ['A280158659', 'B8116741300'];
 
         for (final input in longInputs) {
@@ -84,19 +84,19 @@ void main() {
           expect(
             result.value.isLeft(),
             true,
-            reason: 'Debería fallar por largo: $input',
+            reason: 'Should fail because it is too long: $input',
           );
           result.value.map(
             isLeft: (l) => expect(l, isA<CifFailureTooLong>()),
-            isRight: (r) => fail('No debería ser válido: $input'),
+            isRight: (r) => fail('Should not be valid: $input'),
           );
         }
       });
     });
 
-    group('Casos de Fallo - Formato y Algoritmo (Invalid)', () {
-      test('debe retornar CifFailure.invalid si la primera letra no es un tipo de entidad permitido', () {
-        // 'X', 'Y', 'Z' son de NIE/NIF, no de CIF
+    group('Failure Cases - Format and Algorithm (Invalid)', () {
+      test('returns CifFailure.invalid when the first letter is not an allowed entity type', () {
+        // 'X', 'Y', and 'Z' are used by NIE/NIF, not CIF.
         const invalidFirstLetters = ['X28015865', 'Z81167413', 'I12345678'];
 
         for (final cif in invalidFirstLetters) {
@@ -105,16 +105,16 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, isA<CifFailureInvalid>()),
-            isRight: (r) => fail('No debería aceptar letra inicial: $cif'),
+            isRight: (r) => fail('Should not accept initial letter: $cif'),
           );
         }
       });
 
-      test('debe retornar CifFailure.invalid si no cumple con la estructura 1 letra + 7 números + 1 letra/número', () {
+      test('returns CifFailure.invalid when it does not match the 1 letter + 7 digits + 1 letter/digit structure', () {
         const invalidFormats = [
-          'AA8015865', // Dos letras al inicio
-          'A2801586%', // Carácter especial al final
-          '128015865', // Empieza por número
+          'AA8015865', // Two initial letters.
+          'A2801586%', // Special character at the end.
+          '128015865', // Starts with a number.
         ];
 
         for (final cif in invalidFormats) {
@@ -123,16 +123,16 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, isA<CifFailureInvalid>()),
-            isRight: (r) => fail('No debería aceptar formato: $cif'),
+            isRight: (r) => fail('Should not accept format: $cif'),
           );
         }
       });
 
-      test('debe retornar CifFailure.invalid si el dígito/letra de control es erróneo', () {
-        // A28015865 es el válido; probamos con dígitos de control alterados
+      test('returns CifFailure.invalid when the control digit/letter is incorrect', () {
+        // A28015865 is valid; test with altered control characters.
         const wrongChecksumCifs = [
-          'A28015860', // Dígito de control incorrecto (debería ser 5)
-          'P2807900Z', // Letra de control incorrecta
+          'A28015860', // Incorrect control digit (should be 5).
+          'P2807900Z', // Incorrect control letter.
         ];
 
         for (final cif in wrongChecksumCifs) {
@@ -142,7 +142,7 @@ void main() {
           result.value.map(
             isLeft: (l) => expect(l, isA<CifFailureInvalid>()),
             isRight: (r) =>
-                fail('Debería rechazar checksum erróneo para: $cif'),
+                fail('Should reject incorrect checksum for: $cif'),
           );
         }
       });

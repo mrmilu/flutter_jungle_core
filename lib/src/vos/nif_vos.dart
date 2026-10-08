@@ -11,7 +11,7 @@ class NifVos extends ValueObject<NifFailure, String> {
   }
   const NifVos._(this.value);
 
-  // Tabla de letras para el módulo 23
+  // Letter table for the modulo 23 algorithm.
   static const List<String> _dniLetters = [
     'T',
     'R',
@@ -39,7 +39,7 @@ class NifVos extends ValueObject<NifFailure, String> {
   ];
 
   static Either<NifFailure, String> _validate(String input) {
-    // Validar longitud (debe ser exactamente 9 caracteres: 8 dígitos + 1 letra)
+    // Validate the length (exactly 9 characters: 8 digits + 1 letter).
     if (input.length > 9) {
       return left(const NifFailure.tooLong());
     }
@@ -48,27 +48,27 @@ class NifVos extends ValueObject<NifFailure, String> {
       return left(const NifFailure.tooShort());
     }
 
-    // Validar formato (8 dígitos seguidos de una letra mayúscula)
+    // Validate the format (8 digits followed by an uppercase letter).
     const regex = r'^[0-9]{8}[A-Z]$';
     if (!RegExp(regex).hasMatch(input)) {
       return left(const NifFailure.invalid());
     }
 
-    // Extraer el número (primeros 8 caracteres) y la letra (último carácter)
+    // Extract the number (first 8 characters) and the letter (last character).
     final numberStr = input.substring(0, 8);
     final letter = input.substring(8);
 
-    // Convertir el número a entero
+    // Convert the number to an integer.
     final number = int.tryParse(numberStr);
     if (number == null) {
       return left(const NifFailure.invalid());
     }
 
-    // Calcular la letra esperada usando el módulo 23
+    // Calculate the expected letter using modulo 23.
     final remainder = number % 23;
     final expectedLetter = _dniLetters[remainder];
 
-    // Comparar la letra proporcionada con la esperada
+    // Compare the provided letter with the expected letter.
     if (letter != expectedLetter) {
       return left(const NifFailure.invalid());
     }

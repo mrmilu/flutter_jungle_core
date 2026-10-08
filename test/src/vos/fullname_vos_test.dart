@@ -4,55 +4,55 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('FullnameVos Unit Tests', () {
-    group('Casos Válidos', () {
-      test('debe retornar Right con un nombre simple válido', () {
+    group('Valid Cases', () {
+      test('returns Right for a valid single name', () {
         const input = 'Juan';
         final result = FullnameVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, 'Juan'),
         );
       });
 
-      test('debe retornar Right con nombre y apellidos válidos', () {
+      test('returns Right for a valid first and last name', () {
         const input = 'María del Carmen';
         final result = FullnameVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, 'María del Carmen'),
         );
       });
 
-      test('debe permitir caracteres especiales en español (ñ, tildes)', () {
+      test('allows accented characters, including ñ', () {
         const input = 'Iñigo Peña';
         final result = FullnameVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, 'Iñigo Peña'),
         );
       });
 
-      test('debe hacer trim a los espacios al inicio y al final', () {
+      test('trims leading and trailing whitespace', () {
         const input = '   Carlos Ruiz   ';
         final result = FullnameVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, 'Carlos Ruiz'),
         );
       });
     });
 
-    group('Casos de Fallo - Empty', () {
+    group('Failure Cases - Empty', () {
       test(
-        'debe retornar FullnameFailure.empty cuando el input está vacío',
+        'returns FullnameFailure.empty when the input is empty',
         () {
           const input = '';
           final result = FullnameVos(input);
@@ -60,26 +60,26 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, const FullnameFailure.empty()),
-            isRight: (r) => fail('Debería retornar fallo'),
+            isRight: (r) => fail('Should return a failure'),
           );
         },
       );
 
-      test('debe retornar FullnameFailure.empty cuando el input solo contiene espacios', () {
+      test('returns FullnameFailure.empty when the input contains only whitespace', () {
         const input = '   ';
         final result = FullnameVos(input);
 
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, const FullnameFailure.empty()),
-          isRight: (r) => fail('Debería retornar fallo'),
+          isRight: (r) => fail('Should return a failure'),
         );
       });
     });
 
-    group('Casos de Fallo - Invalid', () {
+    group('Failure Cases - Invalid', () {
       test(
-        'debe retornar FullnameFailure.invalid si contiene números o símbolos',
+        'returns FullnameFailure.invalid when it contains numbers or symbols',
         () {
           const inputs = ['Juan123', 'Ana@Lopez', 'Pedro_Gomez'];
 
@@ -88,48 +88,48 @@ void main() {
             expect(result.value.isLeft(), true);
             result.value.map(
               isLeft: (l) => expect(l, const FullnameFailure.invalid()),
-              isRight: (r) => fail('Debería fallar para input: $input'),
+              isRight: (r) => fail('Should fail for input: $input'),
             );
           }
         },
       );
 
-      test('debe retornar FullnameFailure.invalid si alguna palabra tiene menos de 2 letras', () {
-        const input = 'A Perez'; // 'A' tiene 1 letra
+      test('returns FullnameFailure.invalid if any word has fewer than 2 letters', () {
+        const input = 'A Perez'; // 'A' has 1 letter.
         final result = FullnameVos(input);
 
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, const FullnameFailure.invalid()),
           isRight: (r) =>
-              fail('Debería fallar cuando una palabra tiene menos de 2 letras'),
+              fail('Should fail when a word has fewer than 2 letters'),
         );
       });
 
-      test('debe retornar FullnameFailure.invalid si supera las 4 palabras permitidas', () {
-        const input = 'Juan Carlos Perez Gomez Silva'; // 5 palabras
+      test('returns FullnameFailure.invalid if it exceeds the 4-word limit', () {
+        const input = 'Juan Carlos Perez Gomez Silva'; // 5 words.
         final result = FullnameVos(input);
 
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, const FullnameFailure.invalid()),
-          isRight: (r) => fail('Debería fallar cuando tiene más de 4 palabras'),
+          isRight: (r) => fail('Should fail when it contains more than 4 words'),
         );
       });
     });
 
-    group('Casos de Fallo - TooLong', () {
+    group('Failure Cases - TooLong', () {
       test(
-        'debe retornar FullnameFailure.tooLong si supera los 30 caracteres',
+        'returns FullnameFailure.tooLong when longer than 30 characters',
         () {
-          // "Alejandrina Constantina de la Trinidad" tiene más de 30 caracteres
-          const input = 'Alejandrina Constantina Trinidad'; // 32 caracteres
+          // "Alejandrina Constantina de la Trinidad" is longer than 30 characters.
+          const input = 'Alejandrina Constantina Trinidad'; // 32 characters.
           final result = FullnameVos(input);
 
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, const FullnameFailure.tooLong()),
-            isRight: (r) => fail('Debería retornar FullnameFailure.tooLong'),
+            isRight: (r) => fail('Should return FullnameFailure.tooLong'),
           );
         },
       );

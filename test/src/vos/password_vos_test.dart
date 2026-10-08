@@ -4,43 +4,43 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('PasswordVos Unit Tests', () {
-    group('Casos Válidos', () {
+    group('Valid Cases', () {
       test(
-        'debe retornar Right con contraseñas que cumplen todos los criterios',
+        'returns Right for passwords that meet all criteria',
         () {
           const validPasswords = [
             'Password123!',
             'A1b2c3d4#',
             'SecurePass1\$',
-            'Clave123@Segura',
+            'Secret123@Safe',
           ];
 
           for (final pass in validPasswords) {
             final result = PasswordVos(pass);
 
-            expect(result.value.isRight(), true, reason: 'Falló para: $pass');
+            expect(result.value.isRight(), true, reason: 'Failed for: $pass');
             result.value.map(
-              isLeft: (l) => fail('No debería retornar fallo para: $pass'),
+              isLeft: (l) => fail('Should not return a failure for: $pass'),
               isRight: (r) => expect(r, pass),
             );
           }
         },
       );
 
-      test('debe hacer trim a los espacios al inicio y al final', () {
+      test('trims leading and trailing whitespace', () {
         const input = '   Password123!   ';
         final result = PasswordVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar fallo'),
+          isLeft: (l) => fail('Should not return a failure'),
           isRight: (r) => expect(r, 'Password123!'),
         );
       });
     });
 
-    group('Casos de Fallo', () {
-      test('debe retornar PasswordFailure.minLength si la contraseña tiene menos de 8 caracteres o está vacía', () {
+    group('Failure Cases', () {
+      test('returns PasswordFailure.minLength if the password has fewer than 8 characters or is empty', () {
         const shortPasswords = ['', '   ', 'Pass1!', 'A1b2c3!'];
 
         for (final pass in shortPasswords) {
@@ -49,17 +49,17 @@ void main() {
           expect(
             result.value.isLeft(),
             true,
-            reason: 'Debería fallar por longitud: $pass',
+            reason: 'Should fail because of length: $pass',
           );
           result.value.map(
             isLeft: (l) => expect(l, isA<PasswordFailureInvalidMinLength>()),
-            isRight: (r) => fail('No debería ser válida: $pass'),
+            isRight: (r) => fail('Should not be valid: $pass'),
           );
         }
       });
 
       test(
-        'debe retornar PasswordFailure.includeUppercase si falta la mayúscula',
+        'returns PasswordFailure.includeUppercase if uppercase is missing',
         () {
           const noUppercase = 'password123!';
           final result = PasswordVos(noUppercase);
@@ -67,13 +67,13 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, isA<PasswordFailureIncludeUppercase>()),
-            isRight: (r) => fail('Debería fallar por falta de mayúscula'),
+            isRight: (r) => fail('Should fail because uppercase is missing'),
           );
         },
       );
 
       test(
-        'debe retornar PasswordFailure.includeLowercase si falta la minúscula',
+        'returns PasswordFailure.includeLowercase if lowercase is missing',
         () {
           const noLowercase = 'PASSWORD123!';
           final result = PasswordVos(noLowercase);
@@ -81,12 +81,12 @@ void main() {
           expect(result.value.isLeft(), true);
           result.value.map(
             isLeft: (l) => expect(l, isA<PasswordFailureIncludeLowercase>()),
-            isRight: (r) => fail('Debería fallar por falta de minúscula'),
+            isRight: (r) => fail('Should fail because lowercase is missing'),
           );
         },
       );
 
-      test('debe retornar PasswordFailure.includeSpecialCharacter si falta el carácter especial', () {
+      test('returns PasswordFailure.includeSpecialCharacter if a special character is missing', () {
         const noSpecialChar = 'Password123';
         final result = PasswordVos(noSpecialChar);
 
@@ -94,18 +94,18 @@ void main() {
         result.value.map(
           isLeft: (l) =>
               expect(l, isA<PasswordFailureIncludeSpecialCharacter>()),
-          isRight: (r) => fail('Debería fallar por falta de carácter especial'),
+          isRight: (r) => fail('Should fail because a special character is missing'),
         );
       });
 
-      test('debe retornar PasswordFailure.includeDigit si falta un dígito numérico', () {
+      test('returns PasswordFailure.includeDigit if a digit is missing', () {
         const noDigit = 'Password!';
         final result = PasswordVos(noDigit);
 
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, isA<PasswordFailureIncludeDigit>()),
-          isRight: (r) => fail('Debería fallar por falta de dígito numérico'),
+          isRight: (r) => fail('Should fail because a digit is missing'),
         );
       });
     });

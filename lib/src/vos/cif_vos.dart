@@ -12,7 +12,7 @@ class CifVos extends ValueObject<CifFailure, String> {
 
   const CifVos._(this.value);
 
-  // Se añaden 'K' y 'V' a las letras válidas
+  // 'K' and 'V' are also valid letters.
   static const List<String> _validFirstLetters = [
     'A',
     'B',
@@ -34,7 +34,7 @@ class CifVos extends ValueObject<CifFailure, String> {
     'W',
   ];
 
-  // Índice 0 -> J, 1 -> A, 2 -> B ... 9 -> I
+  // Index 0 -> J, 1 -> A, 2 -> B ... 9 -> I
   static const String _controlLetters = 'JABCDEFGHI';
 
   static Either<CifFailure, String> _validate(String input) {
@@ -82,15 +82,15 @@ class CifVos extends ValueObject<CifFailure, String> {
     bool isValid = false;
 
     if (['K', 'P', 'Q', 'S', 'N', 'W'].contains(firstLetter)) {
-      // Solo letra
+      // Letter only.
       isValid = controlChar == controlAsLetter;
     } else if (['A', 'B', 'E', 'H'].contains(firstLetter)) {
-      // Puede ser número o letra
+      // Either a number or a letter.
       isValid =
           controlChar == controlDigit.toString() ||
           controlChar == controlAsLetter;
     } else {
-      // Solo número
+      // Number only.
       isValid = controlChar == controlDigit.toString();
     }
 

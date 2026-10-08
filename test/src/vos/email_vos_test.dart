@@ -4,74 +4,74 @@ import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('EmailVos Unit Tests', () {
-    group('Casos Válidos', () {
-      test('debe retornar Right con correos válidos en formato estándar', () {
+    group('Valid Cases', () {
+      test('returns Right for valid email addresses in standard format', () {
         const validEmails = [
-          'usuario@ejemplo.com',
-          'nombre.apellido@dominio.co',
+          'user@example.com',
+          'first.last@domain.co',
           'user+tag@example.org',
-          'admin@sub.dominio.es',
+          'admin@sub.domain.es',
           'user_123@domain.com.mx',
         ];
 
         for (final email in validEmails) {
           final result = EmailVos(email);
 
-          expect(result.value.isRight(), true, reason: 'Falló para: $email');
+          expect(result.value.isRight(), true, reason: 'Failed for: $email');
           result.value.map(
-            isLeft: (l) => fail('No debería retornar fallo para: $email'),
+            isLeft: (l) => fail('Should not return a failure for: $email'),
             isRight: (r) => expect(r, email),
           );
         }
       });
 
-      test('debe hacer trim a los espacios al inicio y al final', () {
-        const input = '   test@ejemplo.com   ';
+      test('trims leading and trailing whitespace', () {
+        const input = '   test@example.com   ';
         final result = EmailVos(input);
 
         expect(result.value.isRight(), true);
         result.value.map(
-          isLeft: (l) => fail('No debería retornar un fallo'),
-          isRight: (r) => expect(r, 'test@ejemplo.com'),
+          isLeft: (l) => fail('Should not return a failure'),
+          isRight: (r) => expect(r, 'test@example.com'),
         );
       });
     });
 
-    group('Casos de Fallo - Empty', () {
-      test('debe retornar EmailFailure.empty cuando el input está vacío', () {
+    group('Failure Cases - Empty', () {
+      test('returns EmailFailure.empty when the input is empty', () {
         const input = '';
         final result = EmailVos(input);
 
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, const EmailFailure.empty()),
-          isRight: (r) => fail('Debería retornar fallo'),
+          isRight: (r) => fail('Should return a failure'),
         );
       });
 
-      test('debe retornar EmailFailure.empty cuando el input solo contiene espacios', () {
+      test('returns EmailFailure.empty when the input contains only whitespace', () {
         const input = '     ';
         final result = EmailVos(input);
 
         expect(result.value.isLeft(), true);
         result.value.map(
           isLeft: (l) => expect(l, const EmailFailure.empty()),
-          isRight: (r) => fail('Debería retornar fallo'),
+          isRight: (r) => fail('Should return a failure'),
         );
       });
     });
 
-    group('Casos de Fallo - Invalid', () {
-      test('debe retornar EmailFailure.invalid para formatos de correo incorrectos', () {
+    group('Failure Cases - Invalid', () {
+      test('returns EmailFailure.invalid for malformed email addresses', () {
         const invalidEmails = [
-          'sin_arroba.com',
-          'usuario@',
-          '@dominio.com',
-          'usuario@dominio',
-          'usuario@dominio.c', // TLD de solo 1 carácter (el regex exige {2,})
-          'usuario@.com',
-          'usuario con espacios@dominio.com',
-          'usuario@dominio..com',
+          'missing_at_sign.com',
+          'user@',
+          '@domain.com',
+          'user@domain',
+          'user@domain.c', // One-character TLD (the regex requires {2,}).
+          'user@.com',
+          'user with spaces@domain.com',
+          'user@domain..com',
         ];
 
         for (final email in invalidEmails) {
@@ -80,15 +80,15 @@ void main() {
           expect(
             result.value.isLeft(),
             true,
-            reason: 'Debería ser inválido: $email',
+            reason: 'Should be invalid: $email',
           );
           result.value.map(
             isLeft: (l) => expect(
               l,
               const EmailFailure.invalid(),
-              reason: 'Fallo incorrecto para: $email',
+              reason: 'Incorrect failure for: $email',
             ),
-            isRight: (r) => fail('No debería ser válido: $email'),
+            isRight: (r) => fail('Should not be valid: $email'),
           );
         }
       });
