@@ -1,0 +1,10 @@
+export 'cif_vos.dart';
+export 'description_vos.dart';
+export 'email_vos.dart';
+export 'fullname_vos.dart';
+export 'iban_vos.dart';
+export 'nie_vos.dart';
+export 'nif_vos.dart';
+export 'password_repeat_vos.dart';
+export 'password_vos.dart';
+export 'phone_vos.dart';

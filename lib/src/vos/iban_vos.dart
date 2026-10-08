@@ -1,5 +1,6 @@
-import '../../flutter_jungle_core.dart';
 import '../failures/iban_failure.dart';
+import '../helpers/either.dart';
+import '../helpers/value_object.dart';
 
 class IbanVos extends ValueObject<IbanFailure, String> {
   @override

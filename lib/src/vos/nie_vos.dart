@@ -1,5 +1,6 @@
-import '../../flutter_jungle_core.dart';
 import '../failures/nie_failure.dart';
+import '../helpers/either.dart';
+import '../helpers/value_object.dart';
 
 class NieVos extends ValueObject<NieFailure, String> {
   @override

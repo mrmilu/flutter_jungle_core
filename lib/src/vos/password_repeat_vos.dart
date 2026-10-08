@@ -1,5 +1,6 @@
-import '../../flutter_jungle_core.dart';
 import '../failures/password_repeat_failure.dart';
+import '../helpers/either.dart';
+import '../helpers/value_object.dart';
 
 class RepeatPasswordVos extends ValueObject<PasswordRepeatFailure, String> {
   @override

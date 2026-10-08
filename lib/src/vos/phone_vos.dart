@@ -1,5 +1,6 @@
-import '../../flutter_jungle_core.dart';
 import '../failures/phone_failure.dart';
+import '../helpers/either.dart';
+import '../helpers/value_object.dart';
 
 class PhoneVos extends ValueObject<PhoneFailure, String> {
   @override

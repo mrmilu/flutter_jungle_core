@@ -1,5 +1,6 @@
-import '../../flutter_jungle_core.dart';
 import '../failures/nif_failure.dart';
+import '../helpers/either.dart';
+import '../helpers/value_object.dart';
 
 class NifVos extends ValueObject<NifFailure, String> {
   @override
