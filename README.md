@@ -8,6 +8,8 @@ modeling results and resources, validated value objects, and logging tools.
 - `Either` for representing a result with either an error or a success value.
 - `Resource` and `ResultOr` for representing loading, success, and failure
   states.
+- `handleRequest` and `handleRequestResultOr` for wrapping asynchronous
+  operations and converting Dio errors into application failures.
 - `ValueObject` as a base class for validated value objects.
 - Ready-to-use validators for CIF, descriptions, email addresses, full names,
   IBAN, NIE, NIF, passwords, password confirmation, and phone numbers.
@@ -77,6 +79,42 @@ result.when(
   isFailure: (error) => print('Error: $error'),
 );
 ```
+
+### Handling requests
+
+`handleRequest` wraps a request that returns data in a `Resource`. It converts
+Dio exceptions into a failure using the API error code when available, or maps
+the Dio error to a `GeneralBaseFailure` otherwise. Other exceptions are logged
+and returned as invalid-response-format failures.
+
+```dart
+import 'package:dio/dio.dart';
+
+final dio = Dio();
+
+final Resource<GeneralBaseFailure, List<String>> users =
+    await handleRequest<GeneralBaseFailure, List<String>>(
+      request: () async => (await dio.get<List<String>>('/users')).data!,
+      fromString: GeneralBaseFailure.fromString,
+      general: (failure) => failure,
+    );
+```
+
+For requests that do not return a value, use `handleRequestResultOr`:
+
+```dart
+final ResultOr<GeneralBaseFailure> result =
+    await handleRequestResultOr<GeneralBaseFailure>(
+      request: () async {
+        await dio.post<void>('/users');
+      },
+      fromString: GeneralBaseFailure.fromString,
+      general: (failure) => failure,
+    );
+```
+
+Both helpers support mock mode. Set `useMockData: true` to skip the request;
+for `handleRequest`, also provide a non-null `mockData` value.
 
 ### Logging
 
