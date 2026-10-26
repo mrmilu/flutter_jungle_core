@@ -2,6 +2,7 @@ export 'cif_failure.dart';
 export 'description_failure.dart';
 export 'email_failure.dart';
 export 'fullname_failure.dart';
+export 'general_base_failure.dart';
 export 'iban_failure.dart';
 export 'nie_failure.dart';
 export 'nif_failure.dart';
