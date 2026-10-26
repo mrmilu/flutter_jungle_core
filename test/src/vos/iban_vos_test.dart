@@ -135,6 +135,7 @@ void main() {
         const badControlDigitsIbans = [
           'ES2114650100992030876293', // DC changed to '99'.
           'ES2114650100002030876293', // DC changed to '00'.
+          'ES6821000418000200051332', // Valid mod-97 checksum, invalid Spanish DC.
         ];
 
         for (final input in badControlDigitsIbans) {

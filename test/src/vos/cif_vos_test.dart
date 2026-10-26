@@ -10,6 +10,7 @@ void main() {
         const validCifs = [
           'A28015865', // Telefónica S.A.
           'B81167413', // CIF with a valid numeric control character.
+          'C28015865', // Entity type with a numeric-only control character.
         ];
 
         for (final cif in validCifs) {

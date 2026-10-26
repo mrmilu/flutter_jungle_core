@@ -31,7 +31,7 @@ class _ValidationPageState extends State<ValidationPage> {
   String _email = '';
   String _password = '';
   String _repeat = '';
-  Resource<String, String> _submit = Resource.none();
+  Resource<String, String> _submit = const Resource.none();
 
   String? _emailError() {
     if (_email.isEmpty) return null;
@@ -66,11 +66,11 @@ class _ValidationPageState extends State<ValidationPage> {
     );
 
     if (email.isInvalid() || password.isInvalid() || repeat.isInvalid()) {
-      setState(() => _submit = Resource.failure('Check the form fields'));
+      setState(() => _submit = const Resource.failure('Check the form fields'));
       return;
     }
 
-    setState(() => _submit = Resource.loading());
+    setState(() => _submit = const Resource.loading());
     await Future<void>.delayed(const Duration(seconds: 1));
     _logger.info('Registered ${email.getOrCrash()}');
     setState(() => _submit = Resource.success(email.getOrCrash()));
