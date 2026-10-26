@@ -75,6 +75,77 @@ sealed class GeneralBaseFailure {
     };
   }
 
+  /// Executes the callback matching this failure type.
+  void when({
+    required void Function() isUnauthorized,
+    required void Function() isInternalError,
+    required void Function() isNetworkError,
+    required void Function() isTimeoutError,
+    required void Function() isInvalidResponseFormat,
+    required void Function() isUnexpectedError,
+  }) {
+    switch (this) {
+      case GeneralBaseFailureUnauthorized():
+        isUnauthorized();
+      case GeneralBaseFailureInternalError():
+        isInternalError();
+      case GeneralBaseFailureNetworkError():
+        isNetworkError();
+      case GeneralBaseFailureTimeoutError():
+        isTimeoutError();
+      case GeneralBaseFailureInvalidResponseFormat():
+        isInvalidResponseFormat();
+      case GeneralBaseFailureUnexpectedError():
+        isUnexpectedError();
+    }
+  }
+
+  /// Maps this failure to a value using the callback for its specific type.
+  T map<T>({
+    required T Function() isUnauthorized,
+    required T Function() isInternalError,
+    required T Function() isNetworkError,
+    required T Function() isTimeoutError,
+    required T Function() isInvalidResponseFormat,
+    required T Function() isUnexpectedError,
+  }) {
+    return switch (this) {
+      GeneralBaseFailureUnauthorized() => isUnauthorized(),
+      GeneralBaseFailureInternalError() => isInternalError(),
+      GeneralBaseFailureNetworkError() => isNetworkError(),
+      GeneralBaseFailureTimeoutError() => isTimeoutError(),
+      GeneralBaseFailureInvalidResponseFormat() => isInvalidResponseFormat(),
+      GeneralBaseFailureUnexpectedError() => isUnexpectedError(),
+    };
+  }
+
+  /// Returns a failure of the matching concrete type with the same code and
+  /// message as this instance.
+  GeneralBaseFailure get typeError => switch (this) {
+    GeneralBaseFailureUnauthorized() => GeneralBaseFailure.unauthorized(
+      code: code,
+      message: message,
+    ),
+    GeneralBaseFailureInternalError() => GeneralBaseFailure.internalError(
+      code: code,
+      message: message,
+    ),
+    GeneralBaseFailureNetworkError() => GeneralBaseFailure.networkError(
+      code: code,
+      message: message,
+    ),
+    GeneralBaseFailureTimeoutError() => GeneralBaseFailure.timeoutError(
+      code: code,
+      message: message,
+    ),
+    GeneralBaseFailureInvalidResponseFormat() =>
+      GeneralBaseFailure.invalidResponseFormat(code: code, message: message),
+    GeneralBaseFailureUnexpectedError() => GeneralBaseFailure.unexpectedError(
+      code: code,
+      message: message,
+    ),
+  };
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
