@@ -5,7 +5,7 @@ part 'nif_failure.freezed.dart';
 /// Represents validation failures for a NIF (Número de Identificación Fiscal / DNI).
 @freezed
 sealed class NifFailure with _$NifFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const NifFailure._();
 
   /// The NIF field is empty or blank.

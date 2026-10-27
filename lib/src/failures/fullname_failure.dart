@@ -5,7 +5,7 @@ part 'fullname_failure.freezed.dart';
 /// Represents validation failures for a full name field.
 @freezed
 sealed class FullnameFailure with _$FullnameFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const FullnameFailure._();
 
   /// The full name field is empty or blank.

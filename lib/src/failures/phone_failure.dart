@@ -5,7 +5,7 @@ part 'phone_failure.freezed.dart';
 /// Represents validation failures for a phone number field.
 @freezed
 sealed class PhoneFailure with _$PhoneFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const PhoneFailure._();
 
   /// The phone number is empty or blank.

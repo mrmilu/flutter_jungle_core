@@ -5,7 +5,7 @@ part 'cif_failure.freezed.dart';
 /// Represents validation failures for a CIF (Código de Identificación Fiscal).
 @freezed
 sealed class CifFailure with _$CifFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const CifFailure._();
 
   /// The CIF field is empty.

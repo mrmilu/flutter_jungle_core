@@ -5,7 +5,7 @@ part 'description_failure.freezed.dart';
 /// Represents validation failures for a text description field.
 @freezed
 sealed class DescriptionFailure with _$DescriptionFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const DescriptionFailure._();
 
   /// The description is empty or blank.

@@ -5,7 +5,7 @@ part 'iban_failure.freezed.dart';
 /// Represents validation failures for an IBAN (International Bank Account Number).
 @freezed
 sealed class IbanFailure with _$IbanFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const IbanFailure._();
 
   /// The IBAN field is empty or blank.

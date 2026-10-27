@@ -5,7 +5,7 @@ part 'resource.freezed.dart';
 /// Represents the state of an asynchronous data fetch or resource operation.
 @freezed
 sealed class Resource<F, T> with _$Resource<F, T> {
-  /// Constructor privado necesario para permitir getters y métodos personalizados.
+  /// Private constructor required to allow custom getters and methods.
   const Resource._();
 
   /// Creates a [Resource] instance in its initial/idle state.

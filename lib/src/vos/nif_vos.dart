@@ -70,7 +70,7 @@ class NifVos extends ValueObject<NifFailure, String> {
       return left(const NifFailure.invalid());
     }
 
-    // Si todas las validaciones pasan, devolver el DNI
+    // If all validations pass, return the DNI.
     return right(input);
   }
 }

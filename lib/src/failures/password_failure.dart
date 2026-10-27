@@ -5,7 +5,7 @@ part 'password_failure.freezed.dart';
 /// Represents validation failures for a password field based on common security policy rules.
 @freezed
 sealed class PasswordFailure with _$PasswordFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const PasswordFailure._();
 
   /// The password field is empty or blank.

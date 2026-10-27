@@ -5,7 +5,7 @@ part 'nie_failure.freezed.dart';
 /// Represents validation failures for a NIE (Número de Identidad de Extranjero).
 @freezed
 sealed class NieFailure with _$NieFailure {
-  /// Constructor privado necesario para permitir getters o métodos personalizados.
+  /// Private constructor required to allow custom getters or methods.
   const NieFailure._();
 
   /// The NIE field is empty or blank.

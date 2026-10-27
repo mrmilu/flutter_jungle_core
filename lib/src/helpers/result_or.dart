@@ -6,7 +6,7 @@ part 'result_or.freezed.dart';
 /// only tracking status and potential failures.
 @freezed
 sealed class ResultOr<F> with _$ResultOr<F> {
-  /// Constructor privado necesario para permitir getters y métodos personalizados.
+  /// Private constructor required to allow custom getters and methods.
   const ResultOr._();
 
   /// Creates a [ResultOr] instance in its initial/idle state.

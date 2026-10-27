@@ -8,7 +8,7 @@ part 'general_base_failure.freezed.dart';
 /// map an error code to a failure.
 @freezed
 sealed class GeneralBaseFailure with _$GeneralBaseFailure {
-  /// Constructor privado necesario para declarar métodos, getters o constructores estáticos personalizados.
+  /// Private constructor required to declare custom methods, getters or static constructors.
   const GeneralBaseFailure._();
 
   /// Creates a failure for an unauthenticated or unauthorized request.

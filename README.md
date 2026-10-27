@@ -16,6 +16,8 @@ modeling results and resources, validated value objects, and logging tools.
 - Specific failures that identify the reason a validation failed.
 - Logging with levels and structured records.
 - The `firstWhereOrNull` extension for iterables.
+- Reusable widgets: `ButtonScaleWidget`, `CustomExpandableWidget`, and
+  `SimpleBlockWidget`.
 
 ## Installation
 
@@ -122,6 +124,41 @@ for `handleRequest`, also provide a non-null `mockData` value.
 final logger = Logger('my_app');
 logger.info('Application started');
 logger.warning('Example warning');
+```
+
+### Widgets
+
+`ButtonScaleWidget` adds a scale animation when its child is tapped:
+
+```dart
+ButtonScaleWidget(
+  onTap: () => print('Button pressed'),
+  percentScale: 0.96,
+  child: const Text('Press me'),
+)
+```
+
+`SimpleBlockWidget` places a child in a customizable block. Use
+`SimpleBlockWidget.withBorder` to create a border using the current theme's
+`onSurface` color by default:
+
+```dart
+SimpleBlockWidget(
+  padding: const EdgeInsets.all(16),
+  backgroundColor: Colors.white,
+  child: const Text('Block content'),
+)
+```
+
+`CustomExpandableWidget` displays an animated expandable section with an
+optional subtitle, collapsed content, footer, and custom children:
+
+```dart
+CustomExpandableWidget(
+  title: 'Details',
+  subtitle: 'Optional subtitle',
+  children: const [Text('Expanded content')],
+)
 ```
 
 ## Available validators

@@ -1,3 +1,7 @@
+## 0.0.6
+
+- Added and exported the `ButtonScaleWidget`, `CustomExpandableWidget`, and `SimpleBlockWidget` reusable widgets.
+
 ## 0.0.5
 
 - Fixed `NieVos` and `NifVos` by removing unreachable parsing fallbacks, since the format regex already guarantees numeric input.
