@@ -1,8 +1,8 @@
 import 'package:flutter_jungle_core/src/helpers/resource.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// Importa tu archivo donde esté declarada la clase Resource
-// import 'package:tu_proyecto/domain/resource.dart';
+// Import the file where the Resource class is declared
+// import 'package:your_project/domain/resource.dart';
 
 void main() {
   group('Resource', () {

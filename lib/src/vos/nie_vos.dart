@@ -18,17 +18,10 @@ class NieVos extends ValueObject<NieFailure, String> {
       return left(const NieFailure.invalid());
     }
 
-    final prefixValue = switch (input[0]) {
-      'X' => '0',
-      'Y' => '1',
-      'Z' => '2',
-      _ => '',
-    };
+    const prefixValues = {'X': '0', 'Y': '1', 'Z': '2'};
+    final prefixValue = prefixValues[input[0]]!;
 
-    final number = int.tryParse(prefixValue + input.substring(1, 8));
-    if (number == null) {
-      return left(const NieFailure.invalid());
-    }
+    final number = int.parse(prefixValue + input.substring(1, 8));
 
     const letters = 'TRWAGMYFPDXBNJZSQVHLCKE';
     final expectedLetter = letters[number % 23];

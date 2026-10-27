@@ -1,8 +1,8 @@
 import 'package:flutter_jungle_core/src/helpers/result_or.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// Importa tu archivo donde esté declarada la clase ResultOr
-// import 'package:tu_proyecto/domain/result_or.dart';
+// Import the file where the ResultOr class is declared
+// import 'package:your_project/domain/result_or.dart';
 
 void main() {
   group('ResultOr', () {

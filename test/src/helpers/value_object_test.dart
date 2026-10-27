@@ -2,9 +2,9 @@ import 'package:flutter_jungle_core/src/helpers/either.dart';
 import 'package:flutter_jungle_core/src/helpers/value_object.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-// Importa tu Either y ValueObject aquí
-// import 'package:tu_proyecto/domain/either.dart';
-// import 'package:tu_proyecto/domain/value_object.dart';
+// Import your Either and ValueObject here
+// import 'package:your_project/domain/either.dart';
+// import 'package:your_project/domain/value_object.dart';
 
 /// Concrete implementation of [ValueObject] for testing purposes.
 class TestValueObject extends ValueObject<String, int> {

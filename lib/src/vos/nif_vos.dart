@@ -59,10 +59,7 @@ class NifVos extends ValueObject<NifFailure, String> {
     final letter = input.substring(8);
 
     // Convert the number to an integer.
-    final number = int.tryParse(numberStr);
-    if (number == null) {
-      return left(const NifFailure.invalid());
-    }
+    final number = int.parse(numberStr);
 
     // Calculate the expected letter using modulo 23.
     final remainder = number % 23;

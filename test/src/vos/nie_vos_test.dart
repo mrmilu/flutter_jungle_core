@@ -10,9 +10,9 @@ void main() {
         () {
           // NIEs with control letters calculated using modulo 23.
           const validNies = [
-            'X1234567L', // Prefijo X (01234567 % 23 = 11 -> 'L')
-            'Y1234567X', // Prefijo Y (11234567 % 23 = 10 -> 'X')
-            'Z1234567R', // Prefijo Z (21234567 % 23 = 1 -> 'R')
+            'X1234567L', // Prefix X (01234567 % 23 = 11 -> 'L')
+            'Y1234567X', // Prefix Y (11234567 % 23 = 10 -> 'X')
+            'Z1234567R', // Prefix Z (21234567 % 23 = 1 -> 'R')
           ];
 
           for (final nie in validNies) {
