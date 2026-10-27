@@ -19,12 +19,12 @@ void main() {
       test('when calls the $expected callback', () {
         var actual = '';
         failure.when(
-          isUnauthorized: () => actual = 'unauthorized',
-          isInternalError: () => actual = 'internalError',
-          isNetworkError: () => actual = 'networkError',
-          isTimeoutError: () => actual = 'timeoutError',
-          isInvalidResponseFormat: () => actual = 'invalidResponseFormat',
-          isUnexpectedError: () => actual = 'unexpectedError',
+          unauthorized: (_, _) => actual = 'unauthorized',
+          internalError: (_, _) => actual = 'internalError',
+          networkError: (_, _) => actual = 'networkError',
+          timeoutError: (_, _) => actual = 'timeoutError',
+          invalidResponseFormat: (_, _) => actual = 'invalidResponseFormat',
+          unexpectedError: (_, _) => actual = 'unexpectedError',
         );
 
         expect(actual, expected);
@@ -32,12 +32,12 @@ void main() {
 
       test('map maps $expected to a value', () {
         final actual = failure.map(
-          isUnauthorized: () => 'unauthorized',
-          isInternalError: () => 'internalError',
-          isNetworkError: () => 'networkError',
-          isTimeoutError: () => 'timeoutError',
-          isInvalidResponseFormat: () => 'invalidResponseFormat',
-          isUnexpectedError: () => 'unexpectedError',
+          unauthorized: (_) => 'unauthorized',
+          internalError: (_) => 'internalError',
+          networkError: (_) => 'networkError',
+          timeoutError: (_) => 'timeoutError',
+          invalidResponseFormat: (_) => 'invalidResponseFormat',
+          unexpectedError: (_) => 'unexpectedError',
         );
 
         expect(actual, expected);

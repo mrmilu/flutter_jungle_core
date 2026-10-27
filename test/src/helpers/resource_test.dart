@@ -129,10 +129,10 @@ void main() {
         bool isNoneCalled = false;
 
         resource.when(
-          isNone: () => isNoneCalled = true,
-          isLoading: () => fail('Should not call isLoading'),
-          isSuccess: (_) => fail('Should not call isSuccess'),
-          isFailure: (_) => fail('Should not call isFailure'),
+          none: () => isNoneCalled = true,
+          loading: () => fail('Should not call isLoading'),
+          success: (_) => fail('Should not call isSuccess'),
+          failure: (_) => fail('Should not call isFailure'),
         );
 
         expect(isNoneCalled, isTrue);
@@ -143,10 +143,10 @@ void main() {
         bool isLoadingCalled = false;
 
         resource.when(
-          isNone: () => fail('Should not call isNone'),
-          isLoading: () => isLoadingCalled = true,
-          isSuccess: (_) => fail('Should not call isSuccess'),
-          isFailure: (_) => fail('Should not call isFailure'),
+          none: () => fail('Should not call isNone'),
+          loading: () => isLoadingCalled = true,
+          success: (_) => fail('Should not call isSuccess'),
+          failure: (_) => fail('Should not call isFailure'),
         );
 
         expect(isLoadingCalled, isTrue);
@@ -159,10 +159,10 @@ void main() {
           String? resultData;
 
           resource.when(
-            isNone: () => fail('Should not call isNone'),
-            isLoading: () => fail('Should not call isLoading'),
-            isSuccess: (data) => resultData = data,
-            isFailure: (_) => fail('Should not call isFailure'),
+            none: () => fail('Should not call isNone'),
+            loading: () => fail('Should not call isLoading'),
+            success: (data) => resultData = data,
+            failure: (_) => fail('Should not call isFailure'),
           );
 
           expect(resultData, equals(tData));
@@ -176,10 +176,10 @@ void main() {
           String? resultFailure;
 
           resource.when(
-            isNone: () => fail('Should not call isNone'),
-            isLoading: () => fail('Should not call isLoading'),
-            isSuccess: (_) => fail('Should not call isSuccess'),
-            isFailure: (failure) => resultFailure = failure,
+            none: () => fail('Should not call isNone'),
+            loading: () => fail('Should not call isLoading'),
+            success: (_) => fail('Should not call isSuccess'),
+            failure: (failure) => resultFailure = failure,
           );
 
           expect(resultFailure, equals(tFailure));
@@ -191,11 +191,11 @@ void main() {
       test('should map ResourceNone correctly', () {
         const resource = Resource<String, String>.none();
 
-        final result = resource.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: (data) => 'success_$data',
-          isFailure: (failure) => 'failure_$failure',
+        final result = resource.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: (data) => 'success_$data',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(result, equals('none_mapped'));
@@ -204,11 +204,11 @@ void main() {
       test('should map ResourceLoading correctly', () {
         const resource = Resource<String, String>.loading();
 
-        final result = resource.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: (data) => 'success_$data',
-          isFailure: (failure) => 'failure_$failure',
+        final result = resource.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: (data) => 'success_$data',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(result, equals('loading_mapped'));
@@ -217,11 +217,11 @@ void main() {
       test('should map ResourceSuccess correctly', () {
         const resource = Resource<String, String>.success(tData);
 
-        final result = resource.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: (data) => 'success_$data',
-          isFailure: (failure) => 'failure_$failure',
+        final result = resource.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: (data) => 'success_$data',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(result, equals('success_$tData'));
@@ -230,11 +230,11 @@ void main() {
       test('should map ResourceFailure correctly', () {
         const resource = Resource<String, String>.failure(tFailure);
 
-        final result = resource.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: (data) => 'success_$data',
-          isFailure: (failure) => 'failure_$failure',
+        final result = resource.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: (data) => 'success_$data',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(result, equals('failure_$tFailure'));
@@ -247,7 +247,7 @@ void main() {
         bool isNoneCalled = false;
 
         resource.maybeWhen(
-          isNone: () => isNoneCalled = true,
+          none: () => isNoneCalled = true,
           orElse: () => fail('Should not call orElse'),
         );
 
@@ -261,7 +261,7 @@ void main() {
           bool isLoadingCalled = false;
 
           resource.maybeWhen(
-            isLoading: () => isLoadingCalled = true,
+            loading: () => isLoadingCalled = true,
             orElse: () => fail('Should not call orElse'),
           );
 
@@ -276,7 +276,7 @@ void main() {
           String? resultData;
 
           resource.maybeWhen(
-            isSuccess: (data) => resultData = data,
+            success: (data) => resultData = data,
             orElse: () => fail('Should not call orElse'),
           );
 
@@ -291,7 +291,7 @@ void main() {
           String? resultFailure;
 
           resource.maybeWhen(
-            isFailure: (failure) => resultFailure = failure,
+            failure: (failure) => resultFailure = failure,
             orElse: () => fail('Should not call orElse'),
           );
 
@@ -304,7 +304,7 @@ void main() {
         bool orElseCalled = false;
 
         resource.maybeWhen(
-          isSuccess: (_) => fail('Should not call isSuccess'),
+          success: (_) => fail('Should not call isSuccess'),
           orElse: () => orElseCalled = true,
         );
 
@@ -319,7 +319,7 @@ void main() {
           const resource = Resource<String, String>.failure(tFailure);
 
           final result = resource.maybeMap<String>(
-            isFailure: (failure) => 'mapped_$failure',
+            failure: (e) => 'mapped_${e.failure}',
             orElse: () => 'orElse_mapped',
           );
 
@@ -331,7 +331,7 @@ void main() {
         const resource = Resource<String, String>.none();
 
         final result = resource.maybeMap<String>(
-          isSuccess: (data) => 'mapped_$data',
+          success: (data) => 'mapped_$data',
           orElse: () => 'orElse_mapped',
         );
 

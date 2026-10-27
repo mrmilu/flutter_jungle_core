@@ -116,10 +116,10 @@ void main() {
         bool isNoneCalled = false;
 
         result.when(
-          isNone: () => isNoneCalled = true,
-          isLoading: () => fail('Should not call isLoading'),
-          isSuccess: () => fail('Should not call isSuccess'),
-          isFailure: (_) => fail('Should not call isFailure'),
+          none: () => isNoneCalled = true,
+          loading: () => fail('Should not call isLoading'),
+          success: () => fail('Should not call isSuccess'),
+          failure: (_) => fail('Should not call isFailure'),
         );
 
         expect(isNoneCalled, isTrue);
@@ -130,10 +130,10 @@ void main() {
         bool isLoadingCalled = false;
 
         result.when(
-          isNone: () => fail('Should not call isNone'),
-          isLoading: () => isLoadingCalled = true,
-          isSuccess: () => fail('Should not call isSuccess'),
-          isFailure: (_) => fail('Should not call isFailure'),
+          none: () => fail('Should not call isNone'),
+          loading: () => isLoadingCalled = true,
+          success: () => fail('Should not call isSuccess'),
+          failure: (_) => fail('Should not call isFailure'),
         );
 
         expect(isLoadingCalled, isTrue);
@@ -144,10 +144,10 @@ void main() {
         bool isSuccessCalled = false;
 
         result.when(
-          isNone: () => fail('Should not call isNone'),
-          isLoading: () => fail('Should not call isLoading'),
-          isSuccess: () => isSuccessCalled = true,
-          isFailure: (_) => fail('Should not call isFailure'),
+          none: () => fail('Should not call isNone'),
+          loading: () => fail('Should not call isLoading'),
+          success: () => isSuccessCalled = true,
+          failure: (_) => fail('Should not call isFailure'),
         );
 
         expect(isSuccessCalled, isTrue);
@@ -160,10 +160,10 @@ void main() {
           String? capturedFailure;
 
           result.when(
-            isNone: () => fail('Should not call isNone'),
-            isLoading: () => fail('Should not call isLoading'),
-            isSuccess: () => fail('Should not call isSuccess'),
-            isFailure: (failure) => capturedFailure = failure,
+            none: () => fail('Should not call isNone'),
+            loading: () => fail('Should not call isLoading'),
+            success: () => fail('Should not call isSuccess'),
+            failure: (failure) => capturedFailure = failure,
           );
 
           expect(capturedFailure, equals(tFailure));
@@ -175,11 +175,11 @@ void main() {
       test('should map ResultOrNone correctly', () {
         const result = ResultOr<String>.none();
 
-        final mapped = result.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: () => 'success_mapped',
-          isFailure: (failure) => 'failure_$failure',
+        final mapped = result.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: () => 'success_mapped',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(mapped, equals('none_mapped'));
@@ -188,11 +188,11 @@ void main() {
       test('should map ResultOrLoading correctly', () {
         const result = ResultOr<String>.loading();
 
-        final mapped = result.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: () => 'success_mapped',
-          isFailure: (failure) => 'failure_$failure',
+        final mapped = result.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: () => 'success_mapped',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(mapped, equals('loading_mapped'));
@@ -201,11 +201,11 @@ void main() {
       test('should map ResultOrSuccess correctly', () {
         const result = ResultOr<String>.success();
 
-        final mapped = result.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: () => 'success_mapped',
-          isFailure: (failure) => 'failure_$failure',
+        final mapped = result.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: () => 'success_mapped',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(mapped, equals('success_mapped'));
@@ -214,11 +214,11 @@ void main() {
       test('should map ResultOrFailure correctly', () {
         const result = ResultOr<String>.failure(tFailure);
 
-        final mapped = result.map<String>(
-          isNone: () => 'none_mapped',
-          isLoading: () => 'loading_mapped',
-          isSuccess: () => 'success_mapped',
-          isFailure: (failure) => 'failure_$failure',
+        final mapped = result.when<String>(
+          none: () => 'none_mapped',
+          loading: () => 'loading_mapped',
+          success: () => 'success_mapped',
+          failure: (failure) => 'failure_$failure',
         );
 
         expect(mapped, equals('failure_$tFailure'));
@@ -231,7 +231,7 @@ void main() {
         bool isNoneCalled = false;
 
         result.maybeWhen(
-          isNone: () => isNoneCalled = true,
+          none: () => isNoneCalled = true,
           orElse: () => fail('Should not call orElse'),
         );
 
@@ -245,7 +245,7 @@ void main() {
           bool isLoadingCalled = false;
 
           result.maybeWhen(
-            isLoading: () => isLoadingCalled = true,
+            loading: () => isLoadingCalled = true,
             orElse: () => fail('Should not call orElse'),
           );
 
@@ -260,7 +260,7 @@ void main() {
           String? capturedFailure;
 
           result.maybeWhen(
-            isFailure: (failure) => capturedFailure = failure,
+            failure: (failure) => capturedFailure = failure,
             orElse: () => fail('Should not call orElse'),
           );
 
@@ -275,7 +275,7 @@ void main() {
           bool isSuccessCalled = false;
 
           result.maybeWhen(
-            isSuccess: () => isSuccessCalled = true,
+            success: () => isSuccessCalled = true,
             orElse: () => fail('Should not call orElse'),
           );
 
@@ -288,7 +288,7 @@ void main() {
         bool orElseCalled = false;
 
         result.maybeWhen(
-          isSuccess: () => fail('Should not call isSuccess'),
+          success: () => fail('Should not call isSuccess'),
           orElse: () => orElseCalled = true,
         );
 
@@ -303,7 +303,7 @@ void main() {
           const result = ResultOr<String>.failure(tFailure);
 
           final mapped = result.maybeMap<String>(
-            isFailure: (failure) => 'mapped_$failure',
+            failure: (failure) => 'mapped_${failure.failure}',
             orElse: () => 'orElse_mapped',
           );
 
@@ -315,7 +315,7 @@ void main() {
         const result = ResultOr<String>.none();
 
         final mapped = result.maybeMap<String>(
-          isSuccess: () => 'mapped_success',
+          success: (_) => 'mapped_success',
           orElse: () => 'orElse_mapped',
         );
 

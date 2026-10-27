@@ -109,11 +109,11 @@ class _ValidationPageState extends State<ValidationPage> {
           const SizedBox(height: 16),
           FilledButton(onPressed: _onSubmit, child: const Text('Register')),
           const SizedBox(height: 16),
-          _submit.map(
-            isNone: () => const SizedBox.shrink(),
-            isLoading: () => const Center(child: CircularProgressIndicator()),
-            isSuccess: (email) => Text('Registered: $email'),
-            isFailure: (error) => Text(
+          _submit.when(
+            none: () => const SizedBox.shrink(),
+            loading: () => const Center(child: CircularProgressIndicator()),
+            success: (email) => Text('Registered: $email'),
+            failure: (error) => Text(
               error,
               style: TextStyle(color: Theme.of(context).colorScheme.error),
             ),

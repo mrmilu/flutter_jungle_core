@@ -1,3 +1,7 @@
+## 0.0.4
+
+- Uses Freezed 4.0.3 and build_runner 2.17.1 for code generation.
+
 ## 0.0.3
 
 - Added `when`, `map`, and `typeError` to `GeneralBaseFailure` for handling and mapping failure variants.
